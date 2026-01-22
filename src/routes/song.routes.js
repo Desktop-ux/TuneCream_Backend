@@ -5,9 +5,7 @@ const uploadFile = require('../services/storage.service')
 const upload = multer({storage:multer.memoryStorage()})
 const songModel = require('../models/song.model')
 
-router.get("/", (req, res)=>{
-    res.send("Backend Working")
-})
+
 
 router.post('/songs',upload.single("audio"),async(req, res)=>{
     console.log(req.body)
