@@ -24,16 +24,33 @@ router.post('/songs',upload.single("audio"),async(req, res)=>{
     })
 })
 
-router.get('/songs',async(req, res)=>{
-    const {mood} = req.query
+router.get('/songs', async (req, res) => {
+  try {
+    const { mood } = req.query
+
+    if (!mood) {
+      return res.status(400).json({
+        message: "Mood query parameter is required",
+        songs: []
+      })
+    }
+
     const songs = await songModel.find({
-        mood: { $regex: new RegExp(`^${mood}$`, "i") }
+      mood: { $regex: new RegExp(`^${mood}$`, "i") }
     })
+
     res.status(200).json({
-        message : "Songs fetched successfully",
-        mood,
-        songs
+      message: "Songs fetched successfully",
+      mood,
+      songs
     })
+  } catch (error) {
+    console.error("Error fetching songs:", error)
+    res.status(500).json({
+      message: "Internal server error"
+    })
+  }
 })
+
 
 module.exports = router
